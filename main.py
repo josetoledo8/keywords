@@ -34,12 +34,15 @@ def extract_text_from_pdf(pdf_file):
 
 
 def text_treatment(sample_raw):
+
+    # Characters which could appear sided to a word, like apple! (fruit) 10%...
     for ponctuation in [':',',','.',';','(',')','!','?','"',"'",'[',']','%','_','/', '\\', '\n']:
 
         sample_raw = sample_raw.replace(ponctuation, '')
 
     sample_raw = sample_raw.split()
 
+    # Grants that special characters will not appear as a list element
     special_character = ['!','@','#','$','%','&','*','(',')',';','-','–','_','+','.', '?', '<', '>','/']
     
     stopwords = '''
