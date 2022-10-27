@@ -48,7 +48,9 @@ def text_treatment(sample_raw):
     stopwords = '''
         mais eu sob você a e i o u ou porém para não sim na no nas em nos portanto há esse essa esses essas 
         assim desta mas então os as do da de um uma sobre ser seja sem ter seu seus que com por das dos como
-        cada ao aos muito muitos muita muitas às à é the in of ele ela nós nos eles elas and
+        cada ao aos muito muitos muita muitas às à é the in of ele ela nós nos eles elas and se além bem são
+        tais tal maior menor tem tinha ser estar  sendo foi sejam quanto quantos qual quais através seu sua meu meus seus suas
+        mesmos dentro também pela pelo pelos pelas boa junto tenham após boa mal bem tida
         '''.split()
 
     sample = []
@@ -107,23 +109,30 @@ def count_phrases(list_of_words:list, words_in_phrase:int) -> dict:
 
     return {'phrase' : phrases, 'frequency' : counts}
 
+folder = 'keywords\\'
 
-pdf_file = 'keywords-extractor\ementa.pdf'
+pdf_files = ['ementa.pdf', 'aba.pdf', 'metodologia_singular.pdf']
 
-sample_raw = extract_text_from_pdf(pdf_file = pdf_file)
+word_sample = []
 
-sample = text_treatment(sample_raw = sample_raw)
+for pdf_file in pdf_files:
 
+    sample_raw = extract_text_from_pdf(pdf_file = folder + pdf_file)
+    
+    word_sample += text_treatment(sample_raw = sample_raw)
+
+    print(len(word_sample))
+    
 # Word counting
-words = count_words(sample = sample)
+words = count_words(sample = word_sample)
 keywords = pd.DataFrame(words).sort_values(by='frequency', ascending=False).reset_index(drop=True)
 keywords = keywords[keywords['frequency'] > 1]
 
 # Phrase counting
-phrases = count_phrases(list_of_words = sample, words_in_phrase = 3)
+phrases = count_phrases(list_of_words = word_sample, words_in_phrase = 3)
 keyphrases = pd.DataFrame(phrases).sort_values(by='frequency', ascending=False).reset_index(drop=True)
 keyphrases = keyphrases[keyphrases['frequency'] > 1]
 
 # Saving dataframes as csv
-keywords.to_csv('keywords-extractor\keywords.csv', index = False)
-keyphrases.to_csv('keywords-extractor\keyphrases.csv', index = False)
+keywords.to_csv('keywords\keywords.csv', index = False)
+keyphrases.to_csv('keywords\keyphrases.csv', index = False)
